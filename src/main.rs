@@ -1,5 +1,7 @@
 extern crate discord;
 
+mod bot;
+
 use discord::Discord;
 use discord::model::Event;
 use std::env;
