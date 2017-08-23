@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Emile Yvan Boutet Livoff <blemille@hotmail.com>"]
 
 [dependencies]
-discord-rs = "0.8.0"
+discord = "0.8.0"
