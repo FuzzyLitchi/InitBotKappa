@@ -2,20 +2,17 @@ extern crate discord;
 
 mod bot;
 
-use discord::Discord;
-use discord::model::Event;
+use bot::Bot;
 use std::env;
 
 fn main() {
-    let discord = Discord::from_bot_token(
+    let bot = Bot::from_bot_token(
         &env::var("DISCORD_TOKEN").expect("Expected token"),
-    ).expect("login failed");
-
-    let (mut connection, _) = discord.connect().expect("connect failed");
+    );
 
     println!("Ready.");
 
-    loop {
+    /*loop {
         match connection.recv_event() {
             Ok(Event::MessageCreate(message)) => {
                 println!("{} says: {}", message.author.name, message.content);
@@ -30,5 +27,5 @@ fn main() {
             }
             Err(err) => println!("Receive error: {:?}", err)
         }
-    }
+    }*/
 }
