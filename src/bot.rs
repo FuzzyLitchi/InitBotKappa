@@ -2,11 +2,11 @@ use discord::Discord;
 use discord::Connection;
 use discord::model::Message;
 
-static prefix: &str = "!";
+static PREFIX: &str = "!";
 
 pub struct Bot {
     discord: Discord,
-    connection: Connection,
+    pub connection: Connection,
 }
 
 impl Bot {
@@ -25,16 +25,18 @@ impl Bot {
             return
         }
 
-        if !message.content.starts_with(prefix) {
+        if !message.content.starts_with(PREFIX) {
             return
         }
 
-        let text = message.content.clone().split_off(prefix.len());
+        let text = message.content.clone().split_off(PREFIX.len());
 
         let (command, args) = {
             let mut vector: Vec<String> = text.split(' ').map(|s| s.to_owned()).collect();
 
-            (vector.pop().unwrap(), vector)
+            (vector.remove(0), vector)
         };
+
+        //run command
     }
 }
