@@ -1,5 +1,7 @@
+use discord;
 use discord::Discord;
 use discord::Connection;
+use discord::model::Event;
 use discord::model::Message;
 
 static PREFIX: &str = "!";
@@ -20,7 +22,22 @@ impl Bot {
         }
     }
 
-    pub fn handle_message(&self, message: Message) {
+    pub fn serve_forever(&mut self) -> ! {
+        loop {
+            match self.connection.recv_event() {
+                Ok(Event::MessageCreate(message)) => {
+                        self.handle_message(message);
+                }
+                Ok(_) => {}
+                Err(discord::Error::Closed(code, body)) => {
+                    panic!("Gateway closed on us with code {:?}: {}", code, body);
+                }
+                Err(err) => println!("Receive error: {:?}", err)
+            }
+        }
+    }
+
+    fn handle_message(&self, message: Message) {
         if message.author.bot {
             return
         }
