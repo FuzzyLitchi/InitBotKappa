@@ -1,5 +1,6 @@
 extern crate discord;
 
+mod commands;
 mod bot;
 
 use bot::Bot;

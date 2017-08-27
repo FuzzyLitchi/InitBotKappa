@@ -1,3 +1,4 @@
+use commands::run_command;
 use discord;
 use discord::Discord;
 use discord::Connection;
@@ -54,6 +55,7 @@ impl Bot {
             (vector.remove(0), vector)
         };
 
-        //run command
+        self.discord.send_message(message.channel_id, &run_command(command, args), "", false)
+                    .expect("Failed to answer message.");
     }
 }
