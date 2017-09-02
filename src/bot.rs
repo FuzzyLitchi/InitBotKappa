@@ -5,21 +5,21 @@ use discord::Connection;
 use discord::model::Event;
 use discord::model::Message;
 
-static PREFIX: &str = "!";
-
 pub struct Bot {
     pub discord: Discord,
     connection: Connection,
+    pub prefix: String,
 }
 
 impl Bot {
     pub fn from_bot_token(bot_token: &str) -> Bot {
         let discord = Discord::from_bot_token(bot_token).expect("login failed");
-        let (mut connection, _) = discord.connect().expect("connect failed");
+        let (connection, _) = discord.connect().expect("connect failed");
 
         Bot {
             discord,
             connection,
+            prefix: String::from("!"),
         }
     }
 
@@ -38,16 +38,16 @@ impl Bot {
         }
     }
 
-    fn handle_message(&self, message: Message) {
+    fn handle_message(&mut self, message: Message) {
         if message.author.bot {
             return
         }
 
-        if !message.content.starts_with(PREFIX) {
+        if !message.content.starts_with(&self.prefix) {
             return
         }
 
-        let text = message.content.clone().split_off(PREFIX.len());
+        let text = message.content.clone().split_off(self.prefix.len());
 
         let (command, args) = {
             let mut vector: Vec<String> = text.split_whitespace().map(|s| s.to_owned()).collect();
@@ -57,6 +57,7 @@ impl Bot {
 
         match command.as_ref() {
             "ping" => ping::ping(self, &message),
+            "prefix" => prefix::prefix(self, &message, &args),
             _ => (),
         }
     }
