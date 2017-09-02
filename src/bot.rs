@@ -1,4 +1,4 @@
-use commands::run_command;
+use commands::*;
 use discord;
 use discord::Discord;
 use discord::Connection;
@@ -8,8 +8,8 @@ use discord::model::Message;
 static PREFIX: &str = "!";
 
 pub struct Bot {
-    discord: Discord,
-    pub connection: Connection,
+    pub discord: Discord,
+    connection: Connection,
 }
 
 impl Bot {
@@ -50,12 +50,14 @@ impl Bot {
         let text = message.content.clone().split_off(PREFIX.len());
 
         let (command, args) = {
-            let mut vector: Vec<String> = text.split(' ').map(|s| s.to_owned()).collect();
+            let mut vector: Vec<String> = text.split_whitespace().map(|s| s.to_owned()).collect();
 
             (vector.remove(0), vector)
         };
 
-        self.discord.send_message(message.channel_id, &run_command(command, args), "", false)
-                    .expect("Failed to answer message.");
+        match command.as_ref() {
+            "ping" => ping::ping(self, &message),
+            _ => (),
+        }
     }
 }
